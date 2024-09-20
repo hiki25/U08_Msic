@@ -5,6 +5,7 @@
 #include "CSlicableMesh.generated.h"
 
 class UProceduralMeshComponent;
+class UMaterial;
 
 UCLASS()
 class MISC_API ACSlicableMesh : public AActor
@@ -14,7 +15,9 @@ class MISC_API ACSlicableMesh : public AActor
 public:	
 	ACSlicableMesh();
 
-	virtual void OnConstruction(FTransform& Transform) override;
+	virtual void OnConstruction(const FTransform& Transform) override;
+
+	FORCEINLINE UMaterial* GetCapMaterial() { return CapMaterial; }
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
@@ -25,4 +28,7 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UProceduralMeshComponent* ProcMeshComp;
+
+	UPROPERTY(EditAnywhere, Category = "Slice")
+	UMaterial* CapMaterial;
 };

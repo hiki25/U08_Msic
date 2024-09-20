@@ -4,6 +4,12 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "TP_TopDownCharacter.h"
 #include "Engine/World.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Components/DecalComponent.h"
+#include "ProceduralMeshComponent.h"
+#include "KismetProceduralMeshLibrary.h"
+#include "TP_TopDownCharacter.h"
+#include "RHI/CSlicableMesh.h"
 
 ATP_TopDownPlayerController::ATP_TopDownPlayerController()
 {
@@ -27,6 +33,8 @@ void ATP_TopDownPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &ATP_TopDownPlayerController::OnSetDestinationPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &ATP_TopDownPlayerController::OnSetDestinationReleased);
+
+	InputComponent->BindAction("Slice", IE_Pressed, this, &ATP_TopDownPlayerController::OnSlice);
 }
 
 
@@ -67,3 +75,67 @@ void ATP_TopDownPlayerController::OnSetDestinationReleased()
 {
 	bMoveToMouseCursor = false;
 }
+
+void ATP_TopDownPlayerController::OnSlice()
+{
+
+	FVector Start = GetPawn()->GetActorLocation();
+	FVector End = Start + GetPawn()->GetActorForwardVector() * 500.f;
+	ATP_TopDownCharacter* TPCharacter = GetPawn<ATP_TopDownCharacter>();
+	if (TPCharacter)
+	{
+		End = TPCharacter->GetCursorToWorld()->GetComponentLocation();
+		End.Z = Start.Z;
+	}
+
+	TArray<AActor*> Ignores;
+	Ignores.Add(GetPawn());
+
+	FHitResult HitResult;
+
+	UKismetSystemLibrary::LineTraceSingle
+	(
+		GetWorld(),
+		Start,
+		End,
+		UEngineTypes::ConvertToTraceType(ECC_Visibility),
+		true,
+		Ignores,
+		EDrawDebugTrace::ForDuration,
+		HitResult,
+		true,
+		FLinearColor::Red,
+		FLinearColor::Green,
+		1.f);
+
+	if (!HitResult.bBlockingHit)
+	{
+		return;
+	}
+
+	UProceduralMeshComponent* OtherComp = Cast<UProceduralMeshComponent>(HitResult.Component);
+	ACSlicableMesh* OtherActor = Cast<ACSlicableMesh>(HitResult.Actor);
+
+	if (OtherComp && OtherActor)
+	{
+		FVector Dir = End - Start;
+		Dir.Normalize();
+
+		UProceduralMeshComponent* NewComp = nullptr;
+
+		UKismetProceduralMeshLibrary::SliceProceduralMesh
+		(
+			OtherComp,
+			HitResult.Location,
+			TPCharacter->GetActorUpVector() ^ Dir,
+			true,
+			NewComp,
+			EProcMeshSliceCapOption::CreateNewSectionForCap,
+			OtherActor->GetCapMaterial()
+		);
+
+		NewComp->SetSimulatePhysics(true);
+		NewComp->AddImpulse(Dir * 600.f,NAME_None,true);
+	}
+}
+

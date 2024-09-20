@@ -30,9 +30,9 @@ ACSlicableMesh::ACSlicableMesh()
 	bRunConstructionScriptOnDrag = false;
 }
 
-void ACSlicableMesh::OnConstruction(FTransform& Transform)
+void ACSlicableMesh::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	UKismetProceduralMeshLibrary::CopyProceduralMeshFromStaticMeshComponent(StaticMeshComp, 0, );
+	UKismetProceduralMeshLibrary::CopyProceduralMeshFromStaticMeshComponent(StaticMeshComp, 0, ProcMeshComp, true);
 }
