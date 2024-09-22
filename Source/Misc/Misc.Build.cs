@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 using UnrealBuildTool;
 
 public class Misc : ModuleRules
@@ -10,13 +8,13 @@ public class Misc : ModuleRules
 
 		PublicIncludePaths.Add(ModuleDirectory);
 
-
-		PublicDependencyModuleNames.AddRange(new string[] { 
+		PublicDependencyModuleNames.AddRange(new string[] 
+		{
 			"Core",
 			"CoreUObject",
-			"Engine", 
-			"InputCore" ,
-			"ProceduralMeshComponent" ,
+			"Engine",
+			"InputCore",
+			"ProceduralMeshComponent",
 			"AIModule"
 		});
 

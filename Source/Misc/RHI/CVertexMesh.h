@@ -19,19 +19,20 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void Tick(float DeltaSeconde) override;
+	virtual void Tick(float DeltaTime) override;
 
+private:
 	void AddIndices(int32 StartIndex);
-
+	
 protected:
-	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
+	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UProceduralMeshComponent* ProcMeshComp;
 
-	TArray<FVector>Positions;
-	TArray<int32>Indices;
-	TArray<FVector>Normals;
-	TArray<FVector2D>UVs;
-	TArray<FColor>Colors;
-	TArray<FProcMeshTangent>Tangents;
+	TArray<FVector> Positions;
+	TArray<int32> Indices;
+	TArray<FVector> Normals;
+	TArray<FVector2D> UVs;
+	TArray<FColor> Colors;
+	TArray<FProcMeshTangent> Tangents;
 
 };
