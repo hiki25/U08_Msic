@@ -1,6 +1,8 @@
 #include "CSlicableMesh.h"
 #include "ProceduralMeshComponent.h"
 #include "KismetProceduralMeshLibrary.h"
+#include "Engine.h"
+#include "Materials/Material.h"
 
 ACSlicableMesh::ACSlicableMesh()
 {
@@ -26,6 +28,11 @@ ACSlicableMesh::ACSlicableMesh()
 	ProcMeshComp->bUseComplexAsSimpleCollision = false;
 
 	bRunConstructionScriptOnDrag = false;
+}
+
+UMaterial* ACSlicableMesh::GetCapMaterial()
+{
+	return CapMaterial;
 }
 
 void ACSlicableMesh::OnConstruction(const FTransform& Transform)

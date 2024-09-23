@@ -10,6 +10,7 @@
 #include "ProceduralMeshComponent.h"
 #include "TP_TopDownCharacter.h"
 #include "RHI/CSlicableMesh.h"
+#include "Materials/MaterialInterface.h"
 
 ATP_TopDownPlayerController::ATP_TopDownPlayerController()
 {
@@ -128,7 +129,7 @@ void ATP_TopDownPlayerController::OnSlice()
 			true,
 			NewComp,
 			EProcMeshSliceCapOption::CreateNewSectionForCap,
-			OtherActor->GetCapMaterial()
+			(UMaterialInterface*)OtherActor->GetCapMaterial()
 		);
 
 		NewComp->SetSimulatePhysics(true);
